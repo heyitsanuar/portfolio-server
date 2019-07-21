@@ -43,9 +43,6 @@
     "_moduleAliases": {
         "@app": "./src/app",
         "@user": "./src/user",
-        "@bag": "./src/bag",
-        "@wishlist": "./src/wishlist",
-        "@product": "./src/product",
         "@bin": "./src/app/bin",
         "@config": "./src/app/config",
         "@interfaces": "./src/app/interfaces",

@@ -19,9 +19,6 @@
         "paths": {
             "@app/*": ["app/*"],
             "@user/*": ["user/*"],
-            "@bag/*": ["bag/*"],
-            "@wishlist/*": ["wishlist/*"],
-            "@product/*": ["product/*"],
             "@bin/*": ["app/bin/*"],
             "@config/*": ["app/config/*"],
             "@interfaces/*": ["app/interfaces/*"],
