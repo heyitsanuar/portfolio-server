@@ -9,16 +9,17 @@ import {
   removeProject,
   hasMissingParams,
 } from './project.controller';
+import { RequestResponseType } from '@app/type/request.type';
 
 export const ProjectRoutes = express.Router();
 
 ProjectRoutes.get(
   '/project',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { code, data }: any = await getProjects();
+      const { code, data }: RequestResponseType = await getProjects();
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send({ projects: data });
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -27,11 +28,11 @@ ProjectRoutes.get(
 
 ProjectRoutes.get(
   '/project/:id',
-  async (req: Request, res: Response): Promise<object | Error> => {
-    const projectID = (req as any).sanitize(req.params.id);
+  async (req: Request, res: Response): Promise<Response> => {
+    const projectID: string = (req as any).sanitize(req.params.id);
 
     try {
-      const { code, data }: any = await getProject(projectID);
+      const { code, data }: RequestResponseType = await getProject(projectID);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -42,15 +43,13 @@ ProjectRoutes.get(
 
 ProjectRoutes.post(
   '/project',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const sanitizedProject: any = sanitizeBody(req);
 
     try {
-      const project: any = hasMissingParams(sanitizedProject);
+      if (hasMissingParams(sanitizedProject)) throw { code: 400, message: 'Please fill in all the fields.' };
 
-      if (!project) throw project;
-
-      const { code, data }: any = await saveProject(project);
+      const { code, data }: RequestResponseType = await saveProject(sanitizedProject);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -59,18 +58,16 @@ ProjectRoutes.post(
   },
 );
 
-ProjectRoutes.put(
+ProjectRoutes.patch(
   '/project/:id',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const sanitizedProject: any = sanitizeBody(req);
-    const projectID = (req as any).sanitize(req.params.id);
+    const projectID: string = (req as any).sanitize(req.params.id);
 
     try {
-      const project: any = hasMissingParams(sanitizedProject);
+      if (hasMissingParams(sanitizedProject)) throw { code: 400, message: 'Please fill in all the fields.' };
 
-      if (!project) throw project;
-
-      const { code, data }: any = await editProject(project, projectID);
+      const { code, data }: RequestResponseType = await editProject(sanitizedProject, projectID);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -78,3 +75,15 @@ ProjectRoutes.put(
     }
   },
 );
+
+ProjectRoutes.delete('/project/:id', async (req: Request, res: Response): Promise<Response> => {
+  const projectID: string = (req as any).sanitize(req.params.id);
+
+  try {
+    const { code, message }: RequestResponseType = await removeProject(projectID);
+
+    return res.status(code).send({ message });
+  } catch ({ code, message }) {
+    return res.status(code).send({ message });
+  }
+});
