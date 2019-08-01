@@ -10,21 +10,21 @@ export const saveUser = (user: UserType): Promise<RequestResponseInterface> => {
         bcrypt.hash(user.password, null, (error: any, hash: string): void => {
             if (error) return reject({ code: 500, message: 'Error when creating user password.' });
 
-            let newUser: Document = new UserModel(user);
+            let newUser: any = new UserModel(user);
             newUser.password = hash;
 
             newUser.save((err: Error, product: Document): void => {
                 if (err) return reject({ code: 500, message: 'Error when creating user password.' });
 
-                return resolve({ code: 200, data: product });
+                return resolve({ code: 200, message: 'User registered successfully.' });
             });
         });
     });
 };
 
-export const updateUser = (user: UserType): Promise<RequestResponseInterface> => {
+export const updateUser = (user: UserType, userId: string): Promise<RequestResponseInterface> => {
     return new Promise((resolve, reject): void => {
-        UserModel.findOneAndUpdate({ email: user.email }, (err: Error, updatedUser: UserType): void => {
+        UserModel.findOneAndUpdate({ _id: userId, email: user.email }, (err: Error, updatedUser: UserType): void => {
             if (err) return reject({ code: 500, message: 'Error when updating user.' });
             if (!updatedUser) return reject({ code: 404, message: 'User not found.' });
 
@@ -32,6 +32,17 @@ export const updateUser = (user: UserType): Promise<RequestResponseInterface> =>
         });
     });
 };
+
+export const removeUser = (userId: string): Promise<RequestResponseInterface> => {
+    return new Promise((resolve, reject): void => {
+        UserModel.findOneAndRemove({ _id: userId }, (err: Error, removedUser: UserType): any => {
+            if (err) return reject({ code: 500, message: 'Error when removing user.' });
+            if (!removedUser) return reject ({ code: 404, message: 'User not found.' });
+
+            return resolve({ code: 200, message: 'User removed successfully.' });
+        });
+    })
+}
 
 export const getUser = ({ email }: UserType): Promise<RequestResponseInterface> => {
     return new Promise((resolve, reject): void => {
@@ -55,8 +66,8 @@ export const getUsers = (): Promise<RequestResponseInterface> => {
     });
 };
 
-export const hasMissingParams = ({ email, password, name, surname }: UserType): Error | boolean => {
-    if (!email || !password || !name || !surname) throw { code: 200, message: 'Please fill in all the fields.' };
+export const hasMissingParams = ({ name, surname, description, email, password }: UserType): Error | boolean => {
+    if (!name || !surname || !description || !email || !password) throw { code: 200, message: 'Please fill in all the fields.' };
 
     return false;
 };
