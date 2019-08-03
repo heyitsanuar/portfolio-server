@@ -7,7 +7,7 @@ import { RequestResponseType } from '@app/type/request.type';
 
 export const saveUser = (user: UserType): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
-        bcrypt.hash(user.password, null, (error: any, hash: string): void => {
+        bcrypt.hash(user.password, 2, (error: any, hash: string): void => {
             if (error) return reject({ code: 500, message: 'Error when creating user password.' });
 
             let newUser: any = new UserModel(user);
