@@ -19,6 +19,9 @@
         "paths": {
             "@app/*": ["app/*"],
             "@user/*": ["user/*"],
+            "@skill/*": ["user/skill/*"],
+            "@project/*": ["project/*"],
+            "@technology/*": ["project/technology/*"],
             "@bin/*": ["app/bin/*"],
             "@config/*": ["app/config/*"],
             "@interfaces/*": ["app/interfaces/*"],

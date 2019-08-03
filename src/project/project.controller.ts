@@ -1,7 +1,8 @@
-import { ProjectModel } from './project.model';
 import { RequestResponseType } from '@app/type/request.type';
+import { ProjectModel } from './project.model';
+import { ProjectType } from './project.type';
 
-export const getProjects = (): Promise<RequestResponseType>  => new Promise((resolve, reject) => {
+export const getProjects = (): Promise<RequestResponseType> => new Promise((resolve, reject) => {
   ProjectModel.find((err: Error, foundProjects: ProjectType[]): void => {
     if (err) return reject({ code: 500, message: 'Error when searching for projects.' });
 
@@ -47,6 +48,4 @@ export const removeProject = (id: string): Promise<RequestResponseType> => new P
   });
 });
 
-export const hasMissingParams = ({ title, description, info }: ProjectType): boolean => {
-  return (!title || !description || !info);
-};
+export const hasMissingParams = ({ title, description, info }: ProjectType): boolean => !title || !description || !info;
