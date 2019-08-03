@@ -1,19 +1,22 @@
 import express, { Request, Response } from 'express';
 
-import { sanitizeBody } from '@utils/sanitizer.util';
+import { RequestResponseType } from '@app/type/request.type';
+
 import {
   getSkills, getSkill, saveSkill, hasMissingParams, editSkill, removeSkill,
 } from './skill.controller';
+
+import { sanitizeBody } from '@utils/sanitizer.util';
 
 export const SkillRoutes = express.Router();
 
 SkillRoutes.get(
   '/skill',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { code, data }: any = await getSkills();
+      const { code, data }: RequestResponseType = await getSkills();
 
-      return res.status(code).send([...data]);
+      return res.status(code).send({ skills: data });
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -22,11 +25,11 @@ SkillRoutes.get(
 
 SkillRoutes.get(
   '/skill/:id',
-  async (req: Request, res: Response): Promise<object | Error> => {
-    const skillID = (req as any).sanitize(req.params.id);
+  async (req: Request, res: Response): Promise<Response> => {
+    const skillID: string = (req as any).sanitize(req.params.id);
 
     try {
-      const { code, data }: any = await getSkill(skillID);
+      const { code, data }: RequestResponseType = await getSkill(skillID);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -37,11 +40,13 @@ SkillRoutes.get(
 
 SkillRoutes.post(
   '/skill',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const sanitizedSkill: any = sanitizeBody(req);
 
     try {
-      const { code, data }: any = await saveSkill(sanitizedSkill);
+      if (hasMissingParams(sanitizedSkill)) throw { code: 400, message: 'Please fill in all the fields.' };
+
+      const { code, data }: RequestResponseType = await saveSkill(sanitizedSkill);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -50,18 +55,16 @@ SkillRoutes.post(
   },
 );
 
-SkillRoutes.put(
+SkillRoutes.patch(
   '/skill/:id',
-  async (req: Request, res: Response): Promise<object | Error> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const sanitizedSkill: any = sanitizeBody(req);
-    const skillID: any = (req as any).sanitize(req.params.id);
+    const skillID: string = (req as any).sanitize(req.params.id);
 
     try {
-      const skill: any = hasMissingParams(sanitizedSkill);
+      if (hasMissingParams(sanitizedSkill)) throw { code: 400, message: 'Please fill in all the fields.' };
 
-      if (!skill) throw skill;
-
-      const { code, data }: any = await editSkill(skill, skillID);
+      const { code, data }: RequestResponseType = await editSkill(sanitizedSkill, skillID);
 
       return res.status(code).send({ ...data });
     } catch ({ code, message }) {
@@ -72,11 +75,11 @@ SkillRoutes.put(
 
 SkillRoutes.delete(
   '/skill/:id',
-  async (req: Request, res: Response): Promise<object | Error> => {
-    const skillID: any = (req as any).sanitize(req.params.id);
+  async (req: Request, res: Response): Promise<Response> => {
+    const skillID: string = (req as any).sanitize(req.params.id);
 
     try {
-      const { code, message }: any = await removeSkill(skillID);
+      const { code, message }: RequestResponseType = await removeSkill(skillID);
 
       return res.status(code).send({ message });
     } catch ({ code, message }) {

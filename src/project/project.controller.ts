@@ -1,8 +1,7 @@
 import { ProjectModel } from './project.model';
+import { RequestResponseType } from '@app/type/request.type';
 
-i;
-
-export const getProjects = () => new Promise((resolve, reject) => {
+export const getProjects = (): Promise<RequestResponseType>  => new Promise((resolve, reject) => {
   ProjectModel.find((err: Error, foundProjects: ProjectType[]): void => {
     if (err) return reject({ code: 500, message: 'Error when searching for projects.' });
 
@@ -10,7 +9,7 @@ export const getProjects = () => new Promise((resolve, reject) => {
   });
 });
 
-export const getProject = (id: string) => new Promise((resolve, reject) => {
+export const getProject = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
   ProjectModel.findOne({ _id: id }, (err: Error, foundProject: ProjectType): void => {
     if (err) return reject({ code: 500, message: 'Error when searching for project.' });
     if (!foundProject) return reject({ code: 404, message: 'Project not found.' });
@@ -19,7 +18,7 @@ export const getProject = (id: string) => new Promise((resolve, reject) => {
   });
 });
 
-export const saveProject = (project: ProjectType) => new Promise((resolve, reject) => {
+export const saveProject = (project: ProjectType): Promise<RequestResponseType> => new Promise((resolve, reject) => {
   const newProject: any = new ProjectModel(project);
 
   newProject.save((err: Error, savedProject: ProjectType): void => {
@@ -30,7 +29,7 @@ export const saveProject = (project: ProjectType) => new Promise((resolve, rejec
   });
 });
 
-export const editProject = (project: ProjectType, id: string) => new Promise((resolve, reject) => {
+export const editProject = (project: ProjectType, id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
   ProjectModel.findOneAndUpdate({ _id: id }, project, (err: Error, updatedProject: any): void => {
     if (err) return reject({ code: 500, message: 'Error when updating project.' });
     if (!updatedProject) return reject({ code: 404, message: 'Project could not be edited.' });
@@ -39,7 +38,7 @@ export const editProject = (project: ProjectType, id: string) => new Promise((re
   });
 });
 
-export const removeProject = (id: string) => new Promise((resolve, reject) => {
+export const removeProject = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
   ProjectModel.findByIdAndRemove({ _id: id }, (err: Error, removedProject: any): void => {
     if (err) return reject({ code: 500, message: 'Error when removing project.' });
     if (!removedProject) return reject({ code: 404, message: 'Project not found.' });
@@ -48,10 +47,6 @@ export const removeProject = (id: string) => new Promise((resolve, reject) => {
   });
 });
 
-export const hasMissingParams = ({ title, description, info }: ProjectType): Error | boolean => {
-  if (!title || !description || !info) {
-    throw { code: 200, message: 'Please fill in all the fields.' };
-  }
-
-  return false;
+export const hasMissingParams = ({ title, description, info }: ProjectType): boolean => {
+  return (!title || !description || !info);
 };

@@ -3,9 +3,9 @@ import { Document } from 'mongoose';
 
 import { UserModel } from './user.model';
 import { UserType } from './user.type';
-import { RequestResponseInterface } from '../app/interfaces/request.interface';
+import { RequestResponseType } from '@app/type/request.type';
 
-export const saveUser = (user: UserType): Promise<RequestResponseInterface> => {
+export const saveUser = (user: UserType): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
         bcrypt.hash(user.password, null, (error: any, hash: string): void => {
             if (error) return reject({ code: 500, message: 'Error when creating user password.' });
@@ -22,7 +22,7 @@ export const saveUser = (user: UserType): Promise<RequestResponseInterface> => {
     });
 };
 
-export const updateUser = (user: UserType, userId: string): Promise<RequestResponseInterface> => {
+export const updateUser = (user: UserType, userId: string): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
         UserModel.findOneAndUpdate({ _id: userId, email: user.email }, (err: Error, updatedUser: UserType): void => {
             if (err) return reject({ code: 500, message: 'Error when updating user.' });
@@ -33,9 +33,9 @@ export const updateUser = (user: UserType, userId: string): Promise<RequestRespo
     });
 };
 
-export const removeUser = (userId: string): Promise<RequestResponseInterface> => {
+export const removeUser = (userId: string): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
-        UserModel.findOneAndRemove({ _id: userId }, (err: Error, removedUser: UserType): any => {
+        UserModel.findOneAndRemove({ _id: userId }, (err: Error, removedUser: any): void => {
             if (err) return reject({ code: 500, message: 'Error when removing user.' });
             if (!removedUser) return reject ({ code: 404, message: 'User not found.' });
 
@@ -44,7 +44,7 @@ export const removeUser = (userId: string): Promise<RequestResponseInterface> =>
     })
 }
 
-export const getUser = ({ email }: UserType): Promise<RequestResponseInterface> => {
+export const getUser = ({ email }: UserType): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
         UserModel.findOne({ email }, (err: Error, foundUser: UserType): void => {
             if (err) return reject({ code: 500, message: 'Error when finding user.' });
@@ -55,7 +55,7 @@ export const getUser = ({ email }: UserType): Promise<RequestResponseInterface> 
     });
 };
 
-export const getUsers = (): Promise<RequestResponseInterface> => {
+export const getUsers = (): Promise<RequestResponseType> => {
     return new Promise((resolve, reject): void => {
         UserModel.find((error: Error, foundUsers: UserType[]): void => {
             if (error) return reject({ code: 500, message: 'Error when retrieving users.' });
@@ -66,8 +66,10 @@ export const getUsers = (): Promise<RequestResponseInterface> => {
     });
 };
 
-export const hasMissingParams = ({ name, surname, description, email, password }: UserType): Error | boolean => {
-    if (!name || !surname || !description || !email || !password) throw { code: 200, message: 'Please fill in all the fields.' };
-
-    return false;
+export const hasMissingParams = ({ name, surname, description, email, password }: UserType): boolean => {
+    return (!name || !surname || !description || !email || !password);
 };
+
+export const hasMissingParamsForLogin = ({ email, password }: UserType): boolean => {
+    return (!email || !password);
+}
