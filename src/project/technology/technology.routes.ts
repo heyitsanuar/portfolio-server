@@ -34,7 +34,7 @@ TechnologyRoutes.get(
     try {
       const { code, data }: RequestResponseType = await getTechnology(technologyID);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -51,7 +51,7 @@ TechnologyRoutes.post(
 
       const { code, data }: RequestResponseType = await saveTechnology(sanitizedTechnology);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -65,11 +65,9 @@ TechnologyRoutes.patch(
     const technologyID: string = (req as any).sanitize(req.params.id);
 
     try {
-      if (hasMissingParams(sanitizedTechnology)) throw { code: 400, message: 'Please fill in all the fields.' };
-
       const { code, data }: RequestResponseType = await editTechnology(sanitizedTechnology, technologyID);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }

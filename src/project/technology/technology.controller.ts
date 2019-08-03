@@ -31,12 +31,17 @@ export const saveTechnology = (technology: TechnologyType): Promise<RequestRespo
 });
 
 export const editTechnology = (technology: TechnologyType, id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
-  TechnologyModel.findOneAndUpdate({ _id: id }, technology, (err: Error, updatedTechnology: any): void => {
-    if (err) return reject({ code: 500, message: 'Error when updating technology.' });
-    if (!updatedTechnology) return reject({ code: 404, message: 'Technology could not be edited.' });
+  TechnologyModel.findOneAndUpdate(
+    { _id: id },
+    technology,
+    { new: true },
+    (err: Error, updatedTechnology: any): void => {
+      if (err) return reject({ code: 500, message: 'Error when updating technology.' });
+      if (!updatedTechnology) return reject({ code: 404, message: 'Technology could not be edited.' });
 
-    return resolve({ code: 200, data: updatedTechnology });
-  });
+      return resolve({ code: 200, data: updatedTechnology });
+    },
+  );
 });
 
 export const removeTechnology = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {

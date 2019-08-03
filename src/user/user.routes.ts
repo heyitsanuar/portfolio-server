@@ -11,14 +11,12 @@ import { sanitizeBody } from '@utils/sanitizer.util';
 export const UserRoutes = express.Router();
 
 UserRoutes.patch(
-  '/users/:id',
+  '/user/:id',
   async (req: Request, res: Response): Promise<Response> => {
     const sanitizedUser: any = sanitizeBody(req);
     const userID: string = (req as any).sanitize(req.params.id);
 
     try {
-      if (hasMissingParams(sanitizedUser)) throw { code: 400, message: 'Please fill in all the fields.' };
-
       const { code, message }: RequestResponseType = await updateUser(sanitizedUser, userID);
 
       return res.status(code).send({ message });
@@ -29,7 +27,7 @@ UserRoutes.patch(
 );
 
 UserRoutes.delete(
-  '/users/:id',
+  '/user/:id',
   async (req: Request, res: Response): Promise<Response> => {
     const userID: string = (req as any).sanitize(req.params.id);
 
@@ -44,7 +42,7 @@ UserRoutes.delete(
 );
 
 UserRoutes.post(
-  '/users/login',
+  '/user/login',
   async (req: Request, res: Response): Promise<Response> => {
     const sanitizedUser: any = sanitizeBody(req);
 
@@ -53,7 +51,7 @@ UserRoutes.post(
 
       const { code, data }: RequestResponseType = await getUser(sanitizedUser);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -61,7 +59,7 @@ UserRoutes.post(
 );
 
 UserRoutes.post(
-  '/users/register',
+  '/user/register',
   async (req: Request, res: Response): Promise<Response> => {
     const sanitizedUser: any = sanitizeBody(req);
 
