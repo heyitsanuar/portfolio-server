@@ -74,3 +74,13 @@ UserRoutes.post(
     }
   },
 );
+
+UserRoutes.get('/user/anuar', async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { code, data } = await getUser('5d45e21582920ac348240cf7');
+    
+    return res.status(code).send(data);
+  } catch ({ code, message }) {
+    return res.status(code).send({ message });
+  }
+})

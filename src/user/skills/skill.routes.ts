@@ -31,7 +31,7 @@ SkillRoutes.get(
     try {
       const { code, data }: RequestResponseType = await getSkill(skillID);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -48,7 +48,7 @@ SkillRoutes.post(
 
       const { code, data }: RequestResponseType = await saveSkill(sanitizedSkill);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }
@@ -66,7 +66,7 @@ SkillRoutes.patch(
 
       const { code, data }: RequestResponseType = await editSkill(sanitizedSkill, skillID);
 
-      return res.status(code).send({ ...data });
+      return res.status(code).send(data);
     } catch ({ code, message }) {
       return res.status(code).send({ message });
     }

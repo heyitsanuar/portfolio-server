@@ -43,8 +43,8 @@ export const removeUser = (userId: string): Promise<RequestResponseType> => new 
   });
 });
 
-export const getUser = ({ email }: UserType): Promise<RequestResponseType> => new Promise((resolve, reject): void => {
-  UserModel.findOne({ email }, (err: Error, foundUser: UserType): void => {
+export const getUser = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject): void => {
+  UserModel.findOne({ _id: id }, (err: Error, foundUser: UserType): void => {
     if (err) return reject({ code: 500, message: 'Error when finding user.' });
     if (!foundUser) return resolve({ code: 200, message: 'User not found.' });
 
