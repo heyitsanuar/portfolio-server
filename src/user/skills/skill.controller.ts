@@ -49,6 +49,6 @@ export const removeSkill = (skillId: string): Promise<RequestResponseType> => ne
   });
 });
 
-export const hasMissingParams = ({ title }: SkillType): boolean => {
-  return (!title);
+export const hasMissingParams = ({ title, rate }: SkillType): boolean => {
+  return (!title || !rate);
 };

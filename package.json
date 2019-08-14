@@ -43,6 +43,9 @@
     "_moduleAliases": {
         "@app": "./src/app",
         "@user": "./src/user",
+        "@skill": "./src/user/skill",
+        "@project": "./src/project",
+        "@technology": "./src/project/technology",
         "@bin": "./src/app/bin",
         "@config": "./src/app/config",
         "@interfaces": "./src/app/interfaces",
