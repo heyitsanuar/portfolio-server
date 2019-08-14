@@ -8,7 +8,6 @@ import { PORT } from '@config/server.config';
 
 import { AppController } from '@app/app.controller';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const connectToDatabase = async (): Promise<any> => {
     try {
         await mongoose.connect(DB_CONNECT_STRING, { useNewUrlParser: true });

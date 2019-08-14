@@ -1,8 +1,13 @@
 import express from 'express';
-import { BagRoutes } from '@bag/bag.routes';
-import { ProductRoutes } from '@product/product.routes';
+
+import { UserRoutes } from '@user/user.routes';
+import { SkillRoutes } from '@user/skills/skill.routes';
+import { ProjectRoutes } from '@project/project.routes';
+import { TechnologyRoutes } from '@technology/technology.routes';
 
 export const AppRoutes = express.Router();
 
-AppRoutes.use(BagRoutes);
-AppRoutes.use(ProductRoutes);
+AppRoutes.use(UserRoutes);
+AppRoutes.use(ProjectRoutes);
+AppRoutes.use(TechnologyRoutes);
+AppRoutes.use(SkillRoutes);

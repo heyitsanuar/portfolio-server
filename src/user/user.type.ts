@@ -1,10 +1,7 @@
-export interface UserType {
-    email: string;
-    password: string;
+export type UserType = {
     name: string;
     surname: string;
-    gender: string;
-    phone: string;
-    address: string;
-    role: string;
-}
+    description: string;
+    email: string;
+    password: string;
+};
