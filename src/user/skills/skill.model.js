@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const SkillSchema = new mongoose.Schema({
   title: {
@@ -11,8 +11,12 @@ const SkillSchema = new mongoose.Schema({
   },
   isSoftSkill: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-export const SkillModel = mongoose.model('Skill', SkillSchema);
+const SkillModel = mongoose.model('Skill', SkillSchema);
+
+module.exports = {
+  SkillModel,
+};
