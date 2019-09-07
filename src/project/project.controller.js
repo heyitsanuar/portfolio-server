@@ -1,21 +1,19 @@
-import { RequestResponseType } from '@app/type/request.type';
-import { ProjectModel } from './project.model';
-import { ProjectType } from './project.type';
+const { ProjectModel } = require('./project.model');
 
-export const getProjects = (): Promise<RequestResponseType> => new Promise((resolve, reject) => {
+const getProjects = () => new Promise((resolve, reject) => {
   ProjectModel.find()
     .populate('technologies')
-    .exec((err: Error, foundProjects: ProjectType[]): void => {
+    .exec((err, foundProjects) => {
       if (err) return reject({ code: 500, message: 'Error when searching for projects.' });
 
       return resolve({ code: 200, data: foundProjects });
     });
 });
 
-export const getProject = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
+const getProject = id => new Promise((resolve, reject) => {
   ProjectModel.findOne({ _id: id })
     .populate('technologies')
-    .exec((err: Error, foundProject: ProjectType): void => {
+    .exec((err, foundProject) => {
       if (err) return reject({ code: 500, message: 'Error when searching for project.' });
       if (!foundProject) return reject({ code: 404, message: 'Project not found.' });
 
@@ -23,13 +21,13 @@ export const getProject = (id: string): Promise<RequestResponseType> => new Prom
     });
 });
 
-export const saveProject = (project: ProjectType): Promise<RequestResponseType> => new Promise((resolve, reject) => {
-  const newProject: any = new ProjectModel(project);
+const saveProject = project => new Promise((resolve, reject) => {
+  const newProject = new ProjectModel(project);
 
   newProject
     .save()
     .populate('technologies')
-    .exec((err: Error, savedProject: ProjectType): void => {
+    .exec((err, savedProject) => {
       if (err) return reject({ code: 500, message: 'Error when saving project.' });
       if (!savedProject) return reject({ code: 404, message: 'Project could not be saved.' });
 
@@ -37,10 +35,10 @@ export const saveProject = (project: ProjectType): Promise<RequestResponseType> 
     });
 });
 
-export const editProject = (project: ProjectType, id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
+const editProject = (project, id) => new Promise((resolve, reject) => {
   ProjectModel.findOneAndUpdate({ _id: id }, project, { new: true })
     .populate('technologies')
-    .exec((err: Error, updatedProject: any): void => {
+    .exec((err, updatedProject) => {
       if (err) return reject({ code: 500, message: 'Error when updating project.' });
       if (!updatedProject) return reject({ code: 404, message: 'Project could not be edited.' });
 
@@ -48,8 +46,8 @@ export const editProject = (project: ProjectType, id: string): Promise<RequestRe
     });
 });
 
-export const removeProject = (id: string): Promise<RequestResponseType> => new Promise((resolve, reject) => {
-  ProjectModel.findByIdAndRemove({ _id: id }, (err: Error, removedProject: any): void => {
+const removeProject = id => new Promise((resolve, reject) => {
+  ProjectModel.findByIdAndRemove({ _id: id }, (err, removedProject) => {
     if (err) return reject({ code: 500, message: 'Error when removing project.' });
     if (!removedProject) return reject({ code: 404, message: 'Project not found.' });
 
@@ -57,4 +55,13 @@ export const removeProject = (id: string): Promise<RequestResponseType> => new P
   });
 });
 
-export const hasMissingParams = ({ title, description, info }: ProjectType): boolean => !title || !description || !info;
+const hasMissingParams = ({ title, description, info }) => !title || !description || !info;
+
+module.exports = {
+  getProjects,
+  getProject,
+  saveProject,
+  editProject,
+  removeProject,
+  hasMissingParams,
+};

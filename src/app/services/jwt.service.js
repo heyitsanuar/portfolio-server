@@ -2,14 +2,14 @@ import jwt from 'jwt-simple';
 import moment from 'moment';
 
 export class JwtService {
-    private _secret: string;
+    private _secret;
 
     constructor() {
         this._secret = 'Just think of tacos as a gold mine.';
     }
 
     //@ts-ignorets-ignore
-    createToken({ _id, name, surname, email, role }: any) {
+    createToken({ _id, name, surname, email, role }) {
         const payload = {
             sub: _id,
             name,
